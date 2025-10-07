@@ -21,6 +21,60 @@ const HistoryDisputes = () => {
     }
   };
 
+  // Helper: download a file from a URL with fallback to opening in a new tab
+  const downloadFromUrl = async (url: string, filename: string) => {
+    try {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (e) {
+      // If cross-origin prevents downloading, open in a new tab as a fallback
+      window.open(url, "_blank");
+    }
+  };
+
+  // Download a specific document from the selected record
+  const handleDownloadDoc = async (doc: { name: string; link: string }) => {
+    const fileNameFromName = doc.name.replace(/\s+/g, "_");
+    const ext = doc.link.split(".").pop() || "file";
+    await downloadFromUrl(doc.link, `${fileNameFromName}.${ext}`);
+  };
+
+  // Download a simple JSON summary of the selected record (placeholder for PDF)
+  const handleDownloadRecord = () => {
+    if (!selectedRecord) return;
+    const summary = {
+      landId: selectedRecord.landId,
+      surveyNumber: selectedRecord.surveyNumber,
+      village: selectedRecord.village,
+      currentOwner: selectedRecord.currentOwner,
+      area: selectedRecord.area,
+      unit: selectedRecord.unit,
+      createdAt: selectedRecord.createdAt,
+      coordinates: selectedRecord.coordinates,
+      ownershipHistory: selectedRecord.ownershipHistory,
+      disputes: selectedRecord.disputes,
+      documents: selectedRecord.documents,
+    };
+    const blob = new Blob([JSON.stringify(summary, null, 2)], { type: "application/json" });
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = `${selectedRecord.landId}-record.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(objectUrl);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
@@ -114,7 +168,7 @@ const HistoryDisputes = () => {
                   </h2>
                   <p className="text-muted-foreground">{selectedRecord.village}</p>
                 </div>
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleDownloadRecord}>
                   <Download className="mr-2 h-4 w-4" />
                   Download PDF
                 </Button>
@@ -235,7 +289,11 @@ const HistoryDisputes = () => {
                         </p>
                       )}
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownloadDoc(doc)}
+                    >
                       <Download className="mr-2 h-3 w-3" />
                       Download
                     </Button>
