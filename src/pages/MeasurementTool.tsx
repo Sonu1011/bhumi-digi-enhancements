@@ -2,16 +2,25 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bluetooth, Wifi, Zap, MapPin, AlertCircle, CheckCircle } from "lucide-react";
+import {
+  Bluetooth,
+  Wifi,
+  Zap,
+  MapPin,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 const MeasurementTool = () => {
-  const [connectionStatus, setConnectionStatus] = useState<"disconnected" | "connected">("disconnected");
+  const [connectionStatus, setConnectionStatus] = useState<
+    "disconnected" | "connected"
+  >("disconnected");
   const [capturedData, setCapturedData] = useState<any>(null);
 
   const handleConnect = (method: "bluetooth" | "wifi") => {
     const toastId = toast.loading(`Connecting via ${method}...`);
-    
+
     // Simulate connection
     setTimeout(() => {
       setConnectionStatus("connected");
@@ -56,10 +65,13 @@ const MeasurementTool = () => {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Zap className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground">Field Measurement Integration</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              Field Measurement Integration
+            </h1>
           </div>
           <p className="text-muted-foreground">
-            Connect your portable measurement device to capture precise boundary coordinates and site data
+            Connect your portable measurement device to capture precise boundary
+            coordinates and site data
           </p>
         </div>
 
@@ -69,7 +81,9 @@ const MeasurementTool = () => {
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold text-foreground">Device Connection</h2>
+                <h2 className="text-xl font-semibold text-foreground">
+                  Device Connection
+                </h2>
               </div>
               <p className="text-sm text-muted-foreground mb-6">
                 Select a method to connect your portable measurement tool.
@@ -109,13 +123,17 @@ const MeasurementTool = () => {
 
             {/* Current Status */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Current Status</h3>
-              
+              <h3 className="text-lg font-semibold text-foreground mb-4">
+                Current Status
+              </h3>
+
               {connectionStatus === "disconnected" ? (
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
                   <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
                   <div>
-                    <p className="font-medium text-destructive">Disconnected. Ready to connect.</p>
+                    <p className="font-medium text-destructive">
+                      Disconnected. Ready to connect.
+                    </p>
                     <p className="text-sm text-muted-foreground mt-1">
                       Select a connection method above to begin.
                     </p>
@@ -125,7 +143,9 @@ const MeasurementTool = () => {
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-primary/10 border border-primary/20">
                   <CheckCircle className="h-5 w-5 text-primary mt-0.5" />
                   <div>
-                    <p className="font-medium text-primary">Connected and Ready</p>
+                    <p className="font-medium text-primary">
+                      Connected and Ready
+                    </p>
                     <p className="text-sm text-muted-foreground mt-1">
                       Device is ready to capture field measurements.
                     </p>
@@ -137,10 +157,14 @@ const MeasurementTool = () => {
             {/* Captured Data Display */}
             {capturedData && (
               <Card className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4">Captured Data</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-4">
+                  Captured Data
+                </h3>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-muted-foreground">Area Measured</p>
+                    <p className="text-sm text-muted-foreground">
+                      Area Measured
+                    </p>
                     <p className="text-2xl font-bold text-foreground">
                       {capturedData.area.toFixed(2)} m²
                     </p>
@@ -156,7 +180,9 @@ const MeasurementTool = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Boundary Points</p>
+                    <p className="text-sm text-muted-foreground">
+                      Boundary Points
+                    </p>
                     <p className="text-xs font-mono text-foreground mt-1">
                       {capturedData.coordinates.length} coordinates captured
                     </p>
@@ -170,10 +196,13 @@ const MeasurementTool = () => {
           <Card className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <MapPin className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold text-foreground">Supported Land Measurement Units</h2>
+              <h2 className="text-xl font-semibold text-foreground">
+                Supported Land Measurement Units
+              </h2>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              BhumiBandhu supports native regional units for seamless data integration.
+              BhumiBandhu supports native regional units for seamless data
+              integration.
             </p>
 
             <div className="space-y-6">
@@ -182,12 +211,20 @@ const MeasurementTool = () => {
                 <h3 className="text-primary font-semibold mb-3">North India</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3 rounded-lg bg-muted">
-                    <p className="font-medium text-foreground">Bigha (Varies)</p>
-                    <p className="text-xs text-muted-foreground">≈ 27,000 sq ft (UP)</p>
+                    <p className="font-medium text-foreground">
+                      Bigha (Varies)
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      ≈ 27,000 sq ft (UP)
+                    </p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
-                    <p className="font-medium text-foreground">Biswa (Varies)</p>
-                    <p className="text-xs text-muted-foreground">Sub-unit of Bigha</p>
+                    <p className="font-medium text-foreground">
+                      Biswa (Varies)
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Sub-unit of Bigha
+                    </p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Kanal</p>
@@ -195,11 +232,15 @@ const MeasurementTool = () => {
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Marla</p>
-                    <p className="text-xs text-muted-foreground">272.25 sq ft</p>
+                    <p className="text-xs text-muted-foreground">
+                      272.25 sq ft
+                    </p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Gaj</p>
-                    <p className="text-xs text-muted-foreground">9 sq ft (1 Square Yard)</p>
+                    <p className="text-xs text-muted-foreground">
+                      9 sq ft (1 Square Yard)
+                    </p>
                   </div>
                 </div>
               </div>
@@ -210,15 +251,23 @@ const MeasurementTool = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Decimal</p>
-                    <p className="text-xs text-muted-foreground">435.6 sq ft (1/100th Acre)</p>
+                    <p className="text-xs text-muted-foreground">
+                      435.6 sq ft (1/100th Acre)
+                    </p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
-                    <p className="font-medium text-foreground">Katha (Varies)</p>
-                    <p className="text-xs text-muted-foreground">≈ 720 to 1,361 sq ft</p>
+                    <p className="font-medium text-foreground">
+                      Katha (Varies)
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      ≈ 720 to 1,361 sq ft
+                    </p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Chatak</p>
-                    <p className="text-xs text-muted-foreground">Smaller unit (West Bengal)</p>
+                    <p className="text-xs text-muted-foreground">
+                      Smaller unit (West Bengal)
+                    </p>
                   </div>
                 </div>
               </div>
@@ -232,8 +281,12 @@ const MeasurementTool = () => {
                     <p className="text-xs text-muted-foreground">1,089 sq ft</p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
-                    <p className="font-medium text-foreground">Bigha (Varies)</p>
-                    <p className="text-xs text-muted-foreground">Used in Rajasthan/Gujarat</p>
+                    <p className="font-medium text-foreground">
+                      Bigha (Varies)
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Used in Rajasthan/Gujarat
+                    </p>
                   </div>
                 </div>
               </div>
@@ -244,7 +297,9 @@ const MeasurementTool = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Cent</p>
-                    <p className="text-xs text-muted-foreground">435.6 sq ft (1/100th Acre)</p>
+                    <p className="text-xs text-muted-foreground">
+                      435.6 sq ft (1/100th Acre)
+                    </p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Ground</p>
@@ -252,7 +307,9 @@ const MeasurementTool = () => {
                   </div>
                   <div className="p-3 rounded-lg bg-muted">
                     <p className="font-medium text-foreground">Ankanam</p>
-                    <p className="text-xs text-muted-foreground">72 sq ft (Tamil Nadu)</p>
+                    <p className="text-xs text-muted-foreground">
+                      72 sq ft (Tamil Nadu)
+                    </p>
                   </div>
                 </div>
               </div>

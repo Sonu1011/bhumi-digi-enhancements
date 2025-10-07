@@ -1,13 +1,36 @@
 import { Card } from "@/components/ui/card";
 import { useLandRecords } from "@/context/LandRecordsContext";
-import { BarChart3, FileText, AlertCircle, CheckCircle } from "lucide-react";
+import { BarChart3, FileText, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 
 const Dashboard = () => {
   const { landRecords } = useLandRecords();
+
+  // --- GUARD CLAUSE ---
+  // This prevents the component from crashing if landRecords is null, undefined, 
+  // or hasn't been loaded from the context yet. We also ensure it's an array before proceeding.
+  if (!landRecords || !Array.isArray(landRecords)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center p-8 rounded-lg border">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
+          <p className="text-lg font-medium text-muted-foreground">
+            Loading Land Records...
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            If loading persists, ensure LandRecordsContext is properly initialized.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Data calculations are now safe because landRecords is guaranteed to exist and be an array.
   const totalLands = landRecords.length;
-  const totalDisputes = landRecords.reduce((sum, record) => sum + record.disputes.length, 0);
+  // Ensure 'record.disputes' is treated as an array or defaults to length 0
+  const totalDisputes = landRecords.reduce((sum, record) => sum + (record.disputes?.length || 0), 0);
+  
   const resolvedDisputes = landRecords.reduce(
-    (sum, record) => sum + record.disputes.filter(d => d.status === "Resolved").length,
+    (sum, record) => sum + (record.disputes ? record.disputes.filter(d => d.status === "Resolved").length : 0),
     0
   );
   const pendingDisputes = totalDisputes - resolvedDisputes;
@@ -71,6 +94,7 @@ const Dashboard = () => {
         <Card className="p-6">
           <h2 className="mb-4 text-xl font-semibold text-foreground">Recent Land Records</h2>
           <div className="space-y-4">
+            {/* Using optional chaining and null check for safety */}
             {landRecords.slice(0, 5).map((record) => (
               <div
                 key={record.landId}
@@ -83,8 +107,10 @@ const Dashboard = () => {
                 <div className="text-right">
                   <p className="font-medium text-foreground">{record.currentOwner}</p>
                   <p className="text-sm text-muted-foreground">
-                    {record.disputes.length > 0 ? (
+                    {/* Ensure record.disputes exists before accessing length/filter */}
+                    {record.disputes?.length > 0 ? (
                       <span className="text-amber-600">
+                        {/* Use filter only if record.disputes exists */}
                         {record.disputes.filter(d => d.status === "Pending").length} pending
                       </span>
                     ) : (
@@ -94,6 +120,9 @@ const Dashboard = () => {
                 </div>
               </div>
             ))}
+            {landRecords.length === 0 && (
+              <p className="text-center text-muted-foreground py-4">No land records have been added yet.</p>
+            )}
           </div>
         </Card>
       </div>

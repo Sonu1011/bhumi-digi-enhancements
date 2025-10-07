@@ -8,7 +8,7 @@ const Navigation = () => {
     { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/add-land", icon: Plus, label: "Add Land" },
     { to: "/history-disputes", icon: History, label: "History & Disputes" },
-    { to: "/measurement", icon: Ruler, label: "Measurement Tool" },
+    { to: "/measurement-tool", icon: Ruler, label: "Measurement Tool" },
     { to: "/map-view", icon: Map, label: "Map View" },
   ];
 
