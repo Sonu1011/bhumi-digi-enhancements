@@ -1,73 +1,97 @@
-# Welcome to your Lovable project
+# BhumiBandhu: Digital Land Record Management System
 
-## Project info
+BhumiBandhu is a prototype application designed to modernize and secure land ownership records using digital technology, focusing on transparency, history tracking, and dispute resolution.
 
-**URL**: https://lovable.dev/projects/7b2d2481-24f2-4c79-9d43-f1b2445e1377
+This project is built using a modern React/TypeScript stack and uses local browser storage for persistence (simulating a database connection).
 
-## How can I edit this code?
+## 🚀 Getting Started
 
-There are several ways of editing your application.
+Follow these steps to set up and run the BhumiBandhu application locally on your machine.
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7b2d2481-24f2-4c79-9d43-f1b2445e1377) and start prompting.
+You must have the following software installed:
 
-Changes made via Lovable will be committed automatically to this repo.
+1. **Node.js & npm** (Node Package Manager) - <https://nodejs.org/>
 
-**Use your preferred IDE**
+2. **Git** - <https://git-scm.com/>
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 1. Clone the Repository
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Open your terminal and clone the repository using the HTTPS link:
 
-Follow these steps:
+git clone https://github.com/Sonu1011/bhumi-digi-enhancements.git
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Navigate to the Project Folder
 
-# Step 3: Install the necessary dependencies.
-npm i
+Change directory into the newly cloned project:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+cd bhumi-digi-enhancements
+
+
+### 3. Install Dependencies
+
+Install all required Node.js packages and libraries:
+
+npm install
+
+
+### 4. Run the Application
+
+Start the development server using the defined `dev` script. This command uses **Vite** to compile and serve the application.
+
 npm run dev
-```
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The application will now be running on a local port, typically **`http://localhost:5173/`**. Open this URL in your web browser.
 
-**Use GitHub Codespaces**
+## 🗺️ Site Map & Navigation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The application features a single-page structure managed by **React Router**. All main features are accessible via the top navigation bar.
 
-## What technologies are used for this project?
+| Route | Component | Description |
+| :--- | :--- | :--- |
+| `/` | `Home` | Landing page and project overview. |
+| `/dashboard` | `Dashboard` | Key metrics, statistics, and overview of all land records. |
+| `/add-land` | `AddLand` | Form for digitizing a new land record, owner, and official data. |
+| `/history-disputes` | `HistoryDisputes` | Search function to verify land ownership history and track disputes. |
+| `/measurement-tool` | `MeasurementTool` | Interface for simulating GPS/device connection and data capture. |
+| `/map-view` | `MapView` | Visualization of all geo-tagged land records. |
 
-This project is built with:
+## 🛠️ Technology Stack & Dependencies
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+This project is built on a modern, robust front-end stack.
 
-## How can I deploy this project?
+### I. Core Frontend Framework & Language
 
-Simply open [Lovable](https://lovable.dev/projects/7b2d2481-24f2-4c79-9d43-f1b2445e1377) and click on Share -> Publish.
+| Technology | Type | Creator / Original Company | Official Documentation |
+| :--- | :--- | :--- | :--- |
+| **React** | JavaScript Library | Facebook (now Meta) | <https://react.dev/> |
+| **TypeScript** | Programming Language Superset | Microsoft | <https://www.typescriptlang.org/> |
+| **Vite** | Build Tool / Dev Server | Evan You (Creator of Vue.js) | <https://vitejs.dev/> |
+| **React Router** | Routing Library | Remix (Acquired by Shopify) | <https://reactrouter.com/> |
 
-## Can I connect a custom domain to my Lovable project?
+### II. Styling, UI, and Utility Libraries
 
-Yes, you can!
+| Technology | Type | Creator / Original Company | Official Documentation |
+| :--- | :--- | :--- | :--- |
+| **Tailwind CSS** | CSS Framework | Adam Wathan, Steve Schoger | <https://tailwindcss.com/> |
+| **Shadcn/ui** | Component Library | shadcn | <https://ui.shadcn.com/> |
+| **Lucide** | Icon Library | Lucide Maintainers | <https://lucide.dev/> |
+| **Sonner** | Toaster/Notification Library | Emil Kowalski | [https://sonner.emilkowalski.com/](https://sonner.emilkowalski.com/) |
+| **TanStack Query** | Data Fetching & State Management | Tanner Linsley / TanStack | <https://tanstack.com/query/latest> |
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### III. Data and Browser APIs
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+| Technology | Purpose | Notes / Origin |
+| :--- | :--- | :--- |
+| **Local Storage** | Data Persistence (Mock) | Standard Browser API (W3C) |
+| **Geolocation API** | Location Capture | Standard Browser API (W3C) |
+| **File API** | Document/File Handling | Standard Browser API (W3C) |
+
+## 📝 Data Structure
+
+The application uses a Context Provider (`LandRecordsContext`) to simulate data management. Data is initialized from `src/data/gandhiNagarData.ts` and persisted using **Browser Local Storage**.
+
+
