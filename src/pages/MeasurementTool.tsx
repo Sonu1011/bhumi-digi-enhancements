@@ -10,11 +10,12 @@ const MeasurementTool = () => {
   const [capturedData, setCapturedData] = useState<any>(null);
 
   const handleConnect = (method: "bluetooth" | "wifi") => {
-    toast.loading(`Connecting via ${method}...`);
+    const toastId = toast.loading(`Connecting via ${method}...`);
     
     // Simulate connection
     setTimeout(() => {
       setConnectionStatus("connected");
+      toast.dismiss(toastId);
       toast.success(`Connected via ${method}!`);
     }, 1500);
   };
@@ -25,7 +26,7 @@ const MeasurementTool = () => {
       return;
     }
 
-    toast.loading("Capturing field data...");
+    const toastId = toast.loading("Capturing field data...");
 
     // Simulate data capture with dummy data
     setTimeout(() => {
@@ -44,6 +45,7 @@ const MeasurementTool = () => {
       };
 
       setCapturedData(dummyData);
+      toast.dismiss(toastId);
       toast.success("Data captured successfully!");
     }, 2000);
   };

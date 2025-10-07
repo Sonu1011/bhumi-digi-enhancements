@@ -1,11 +1,12 @@
 import { Card } from "@/components/ui/card";
-import { dummyLandRecords } from "@/data/dummyData";
+import { useLandRecords } from "@/context/LandRecordsContext";
 import { BarChart3, FileText, AlertCircle, CheckCircle } from "lucide-react";
 
 const Dashboard = () => {
-  const totalLands = dummyLandRecords.length;
-  const totalDisputes = dummyLandRecords.reduce((sum, record) => sum + record.disputes.length, 0);
-  const resolvedDisputes = dummyLandRecords.reduce(
+  const { landRecords } = useLandRecords();
+  const totalLands = landRecords.length;
+  const totalDisputes = landRecords.reduce((sum, record) => sum + record.disputes.length, 0);
+  const resolvedDisputes = landRecords.reduce(
     (sum, record) => sum + record.disputes.filter(d => d.status === "Resolved").length,
     0
   );
@@ -70,7 +71,7 @@ const Dashboard = () => {
         <Card className="p-6">
           <h2 className="mb-4 text-xl font-semibold text-foreground">Recent Land Records</h2>
           <div className="space-y-4">
-            {dummyLandRecords.slice(0, 5).map((record) => (
+            {landRecords.slice(0, 5).map((record) => (
               <div
                 key={record.landId}
                 className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0"

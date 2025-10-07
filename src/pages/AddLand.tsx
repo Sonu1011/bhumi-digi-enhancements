@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Camera, Upload, Plus, X } from "lucide-react";
 import { toast } from "sonner";
+import { useLandRecords } from "@/context/LandRecordsContext";
+import { LandRecord } from "@/types/land";
 
 interface PastOwner {
   name: string;
@@ -15,6 +18,8 @@ interface PastOwner {
 }
 
 const AddLand = () => {
+  const navigate = useNavigate();
+  const { addLandRecord } = useLandRecords();
   const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   const [pastOwners, setPastOwners] = useState<PastOwner[]>([]);
   const [newOwner, setNewOwner] = useState<PastOwner>({ name: "", year: "", reason: "" });
@@ -52,10 +57,45 @@ const AddLand = () => {
     setPastOwners(pastOwners.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    
+    const newRecord: LandRecord = {
+      landId: formData.get("landId") as string,
+      surveyNumber: formData.get("surveyNumber") as string,
+      village: formData.get("village") as string,
+      currentOwner: formData.get("currentOwner") as string,
+      area: formData.get("area") as string,
+      unit: formData.get("unit") as string || "sq_meters",
+      coordinates: coordinates || { latitude: 0, longitude: 0 },
+      ownershipHistory: [
+        ...pastOwners.map(owner => ({
+          owner: owner.name,
+          from: parseInt(owner.year),
+          to: "Present" as const,
+          transferReason: owner.reason
+        })),
+        {
+          owner: formData.get("currentOwner") as string,
+          from: new Date().getFullYear(),
+          to: "Present" as const,
+          transferReason: "Current Owner"
+        }
+      ],
+      disputes: formData.get("disputeStatus") !== "none" && formData.get("disputeType") ? [{
+        year: new Date().getFullYear(),
+        type: formData.get("disputeType") as string,
+        status: formData.get("disputeStatus") as "Pending" | "Resolved",
+        description: formData.get("disputeDescription") as string || ""
+      }] : [],
+      documents: [],
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+
+    addLandRecord(newRecord);
     toast.success("Land record added successfully!");
-    // Form submission logic here
+    setTimeout(() => navigate("/dashboard"), 1000);
   };
 
   return (
@@ -74,19 +114,19 @@ const AddLand = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <Label htmlFor="landId">Land ID / ULPIN</Label>
-                  <Input id="landId" placeholder="ULP123456789012" required />
+                  <Input id="landId" name="landId" placeholder="ULP123456789012" required />
                 </div>
                 <div>
                   <Label htmlFor="surveyNumber">Survey Number</Label>
-                  <Input id="surveyNumber" placeholder="GN-45/12" required />
+                  <Input id="surveyNumber" name="surveyNumber" placeholder="GN-45/12" required />
                 </div>
                 <div>
                   <Label htmlFor="village">Village / Area</Label>
-                  <Input id="village" placeholder="Sector-5 Gandhinagar" required />
+                  <Input id="village" name="village" placeholder="Sector-5 Gandhinagar" required />
                 </div>
                 <div>
                   <Label htmlFor="currentOwner">Current Owner Name</Label>
-                  <Input id="currentOwner" placeholder="Enter owner name" required />
+                  <Input id="currentOwner" name="currentOwner" placeholder="Enter owner name" required />
                 </div>
                 <div>
                   <Label htmlFor="aadhar">Aadhar Number (Owner)</Label>
@@ -106,11 +146,11 @@ const AddLand = () => {
                 </div>
                 <div>
                   <Label htmlFor="area">Land Area</Label>
-                  <Input id="area" type="number" placeholder="1200" required />
+                  <Input id="area" name="area" type="number" step="0.01" placeholder="1200.50" required />
                 </div>
                 <div>
                   <Label htmlFor="unit">Unit</Label>
-                  <Select>
+                  <Select name="unit" defaultValue="sq_meters">
                     <SelectTrigger>
                       <SelectValue placeholder="Select unit" />
                     </SelectTrigger>
@@ -238,26 +278,27 @@ const AddLand = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <Label htmlFor="disputeStatus">Dispute Status</Label>
-                  <Select>
+                  <Select name="disputeStatus" defaultValue="none">
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">None</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="resolved">Resolved</SelectItem>
+                      <SelectItem value="Pending">Pending</SelectItem>
+                      <SelectItem value="Resolved">Resolved</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
                   <Label htmlFor="disputeType">Dispute Type</Label>
-                  <Input id="disputeType" placeholder="Boundary, Ownership, etc." />
+                  <Input id="disputeType" name="disputeType" placeholder="Boundary, Ownership, etc." />
                 </div>
               </div>
               <div className="mt-4">
                 <Label htmlFor="disputeDescription">Dispute Description</Label>
                 <Textarea
                   id="disputeDescription"
+                  name="disputeDescription"
                   placeholder="Describe the dispute details..."
                   rows={3}
                 />

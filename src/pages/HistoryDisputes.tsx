@@ -4,16 +4,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, FileText, Download, AlertCircle, CheckCircle } from "lucide-react";
-import { searchLandRecords } from "@/data/dummyData";
+import { useLandRecords } from "@/context/LandRecordsContext";
 import { LandRecord } from "@/types/land";
 
 const HistoryDisputes = () => {
+  const { searchRecords } = useLandRecords();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecord, setSelectedRecord] = useState<LandRecord | null>(null);
   const [searchResults, setSearchResults] = useState<LandRecord[]>([]);
 
   const handleSearch = () => {
-    const results = searchLandRecords(searchQuery);
+    const results = searchRecords(searchQuery);
     setSearchResults(results);
     if (results.length === 1) {
       setSelectedRecord(results[0]);
