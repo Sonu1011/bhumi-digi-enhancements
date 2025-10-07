@@ -89,6 +89,22 @@ const AddLand = () => {
                   <Input id="currentOwner" placeholder="Enter owner name" required />
                 </div>
                 <div>
+                  <Label htmlFor="aadhar">Aadhar Number (Owner)</Label>
+                  <Input 
+                    id="aadhar" 
+                    type="text" 
+                    placeholder="XXXX XXXX XXXX" 
+                    maxLength={12}
+                    pattern="[0-9]{12}"
+                    required
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      e.target.value = value;
+                    }}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">12-digit numeric Aadhar number</p>
+                </div>
+                <div>
                   <Label htmlFor="area">Land Area</Label>
                   <Input id="area" type="number" placeholder="1200" required />
                 </div>
