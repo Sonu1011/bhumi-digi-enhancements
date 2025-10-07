@@ -11,13 +11,26 @@ interface LandRecordsContextType {
 const LandRecordsContext = createContext<LandRecordsContextType | undefined>(undefined);
 
 export const LandRecordsProvider = ({ children }: { children: ReactNode }) => {
-  const [landRecords, setLandRecords] = useState<LandRecord[]>(() => {
-    const stored = localStorage.getItem("bhumibandhu_land_records");
-    return stored ? JSON.parse(stored) : dummyLandRecords;
-  });
+  const [landRecords, setLandRecords] = useState<LandRecord[]>([]);
 
+  // One-time init: preload from localStorage, or dummyData if not present
   useEffect(() => {
-    localStorage.setItem("bhumibandhu_land_records", JSON.stringify(landRecords));
+    const stored = localStorage.getItem("bhumibandhu_land_records");
+    if (stored && stored !== "[]") {
+      setLandRecords(JSON.parse(stored));
+    } else {
+      console.log("Initializing with dummy data");
+      console.log(dummyLandRecords);
+      localStorage.setItem("bhumibandhu_land_records", JSON.stringify(dummyLandRecords));
+      setLandRecords(dummyLandRecords);
+    }
+  }, []);
+
+  // Keep localStorage in sync on any change
+  useEffect(() => {
+    if (landRecords.length > 0) {
+      localStorage.setItem("bhumibandhu_land_records", JSON.stringify(landRecords));
+    }
   }, [landRecords]);
 
   const addLandRecord = (record: LandRecord) => {
@@ -26,9 +39,7 @@ export const LandRecordsProvider = ({ children }: { children: ReactNode }) => {
 
   const searchRecords = (query: string): LandRecord[] => {
     const lowerQuery = query.toLowerCase().trim();
-    
     if (!lowerQuery) return landRecords;
-
     return landRecords.filter(
       (record) =>
         record.landId.toLowerCase().includes(lowerQuery) ||
