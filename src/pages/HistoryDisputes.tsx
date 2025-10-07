@@ -132,7 +132,12 @@ const HistoryDisputes = () => {
                       <p className="font-semibold text-foreground">{record.surveyNumber}</p>
                       <p className="text-sm text-muted-foreground">{record.village}</p>
                     </div>
-                    {record.disputes.some((d) => d.status === "Pending") ? (
+                    {record.allotmentStatus === 'Pending Verification' ? (
+                      <Badge variant="secondary" className="gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        Pending Verification
+                      </Badge>
+                    ) : record.disputes.some((d) => d.status === "Pending") ? (
                       <Badge variant="destructive" className="gap-1">
                         <AlertCircle className="h-3 w-3" />
                         Dispute
@@ -191,6 +196,10 @@ const HistoryDisputes = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Registered</p>
                   <p className="font-semibold text-foreground">{selectedRecord.createdAt}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Entered By</p>
+                  <p className="font-semibold text-foreground">{selectedRecord.officerName || 'N/A'}</p>
                 </div>
               </div>
             </Card>

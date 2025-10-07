@@ -23,6 +23,27 @@ export interface Coordinates {
   longitude: number;
 }
 
+export interface TDRTransfer {
+  toLandId: string;
+  toOwner?: string;
+  units: number;
+  year: number;
+  date?: string;
+  certificateNumber?: string;
+  remarks?: string;
+}
+
+export interface TDR {
+  issued: boolean;
+  units: number;
+  certificateId: string;
+  issueDate?: string;
+  expiryDate?: string;
+  transferHistory: TDRTransfer[];
+  availableUnits?: number;
+  status?: "Active" | "Expired" | "Fully Transferred" | "Partially Transferred";
+}
+
 export interface LandRecord {
   landId: string;
   surveyNumber: string;
@@ -36,4 +57,9 @@ export interface LandRecord {
   area?: string;
   unit?: string;
   createdAt?: string;
+  officerName?: string;
+  tdr?: TDR;
+  legalDocumentType?: 'Will' | 'Affidavit' | 'Death Certificate';
+  legalDocumentURL?: string;
+  allotmentStatus?: 'Verified' | 'Pending Verification' | 'Rejected';
 }

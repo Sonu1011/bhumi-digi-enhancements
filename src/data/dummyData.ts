@@ -15,12 +15,43 @@ export const dummyLandRecords: LandRecord[] = [
     ],
     documents: [
       { name: "Will 1995", link: "/docs/gn45_will1995.pdf", uploadDate: "1995-06-15" },
-      { name: "Survey Report 2018", link: "/docs/gn45_survey2018.pdf", uploadDate: "2018-03-22" }
+      { name: "Survey Report 2018", link: "/docs/gn45_survey2018.pdf", uploadDate: "2018-03-22" },
+      { name: "TDR Certificate", link: "/docs/gn45_tdr_cert.pdf", uploadDate: "2019-01-10" }
     ],
     coordinates: { latitude: 23.2156, longitude: 72.6369 },
     area: "1200",
     unit: "sq meters",
-    createdAt: "2005-08-10"
+    createdAt: "2005-08-10",
+    officerName: "Hasmukh Patel",
+    tdr: {
+      issued: true,
+      units: 150,
+      certificateId: "TDR-GN45-001",
+      issueDate: "2019-01-10",
+      expiryDate: "2029-01-10",
+      transferHistory: [
+        { 
+          toLandId: "ULP123456789013", 
+          toOwner: "Vikram Shah",
+          units: 50, 
+          year: 2020,
+          date: "2020-06-15",
+          certificateNumber: "TDR-TRANS-2020-001",
+          remarks: "Transferred for commercial development"
+        },
+        { 
+          toLandId: "ULP123456789014", 
+          toOwner: "Priya Desai",
+          units: 20, 
+          year: 2023,
+          date: "2023-03-22",
+          certificateNumber: "TDR-TRANS-2023-045",
+          remarks: "Partial transfer for residential expansion"
+        }
+      ],
+      availableUnits: 80,
+      status: "Partially Transferred"
+    }
   },
   {
     landId: "ULP123456789013",
@@ -39,7 +70,14 @@ export const dummyLandRecords: LandRecord[] = [
     coordinates: { latitude: 23.2289, longitude: 72.6503 },
     area: "800",
     unit: "sq meters",
-    createdAt: "2010-04-15"
+    createdAt: "2010-04-15",
+    officerName: "Sunita Shah",
+    tdr: {
+      issued: false,
+      units: 0,
+      certificateId: "",
+      transferHistory: []
+    }
   },
   {
     landId: "ULP123456789014",
@@ -61,7 +99,8 @@ export const dummyLandRecords: LandRecord[] = [
     coordinates: { latitude: 23.1956, longitude: 72.6256 },
     area: "1500",
     unit: "sq meters",
-    createdAt: "2015-09-20"
+    createdAt: "2015-09-20",
+    officerName: "Vijay Kumar"
   },
   {
     landId: "ULP123456789015",
@@ -81,7 +120,8 @@ export const dummyLandRecords: LandRecord[] = [
     coordinates: { latitude: 23.2389, longitude: 72.6656 },
     area: "950",
     unit: "sq meters",
-    createdAt: "2018-12-10"
+    createdAt: "2018-12-10",
+    officerName: "Rekha Sharma"
   },
   {
     landId: "ULP123456789016",
@@ -100,7 +140,8 @@ export const dummyLandRecords: LandRecord[] = [
     coordinates: { latitude: 23.1889, longitude: 72.6189 },
     area: "1100",
     unit: "sq meters",
-    createdAt: "2012-08-30"
+    createdAt: "2012-08-30",
+    officerName: "Anil Mehta"
   }
 ];
 

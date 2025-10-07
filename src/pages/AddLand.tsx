@@ -23,6 +23,8 @@ const AddLand = () => {
   const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   const [pastOwners, setPastOwners] = useState<PastOwner[]>([]);
   const [newOwner, setNewOwner] = useState<PastOwner>({ name: "", year: "", reason: "" });
+  const [showLegalAllotment, setShowLegalAllotment] = useState(false);
+  const [legalDoc, setLegalDoc] = useState<{ type: string; file: File | null }>({ type: '', file: null });
 
   const captureLocation = () => {
     if (navigator.geolocation) {
@@ -61,25 +63,35 @@ const AddLand = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    const officerName = formData.get("officerName") as string || "Default Officer";
+    const officerAadhar = formData.get("officerAadhar") as string || "";
+
     const newRecord: LandRecord = {
+      officerName,
+      officerAadhar, // <-- NEW: Officer Aadhar added to record
       landId: formData.get("landId") as string,
       surveyNumber: formData.get("surveyNumber") as string,
       village: formData.get("village") as string,
       currentOwner: formData.get("currentOwner") as string,
       area: formData.get("area") as string,
       unit: formData.get("unit") as string || "sq_meters",
-      coordinates: coordinates || { latitude: 0, longitude: 0 },
+      // NOTE: The LandRecord type likely expects 'coordinates' to be an object with latitude/longitude
+      // The current dummy data uses separate properties, so this might need type adjustment later.
+      // For now, setting it as an object to match the state type:
+      coordinates: coordinates || { latitude: 0, longitude: 0 }, 
       ownershipHistory: [
+        // Map past owners to ownership history format
         ...pastOwners.map(owner => ({
           owner: owner.name,
           from: parseInt(owner.year),
-          to: "Present" as const,
+          to: owner.year, // Use year as 'to' date for past owners, not 'Present'
           transferReason: owner.reason
         })),
+        // Add current owner entry
         {
           owner: formData.get("currentOwner") as string,
           from: new Date().getFullYear(),
-          to: "Present" as const,
+          to: "Present" as const, // Current owner is 'Present'
           transferReason: "Current Owner"
         }
       ],
@@ -89,7 +101,11 @@ const AddLand = () => {
         status: formData.get("disputeStatus") as "Pending" | "Resolved",
         description: formData.get("disputeDescription") as string || ""
       }] : [],
-      documents: [],
+      documents: legalDoc.file ? [{
+        name: `${legalDoc.type} (${legalDoc.file.name})`,
+        link: URL.createObjectURL(legalDoc.file), // In a real app, this would be a cloud URL
+        uploadDate: new Date().toISOString().split('T')[0]
+      }] : [],
       createdAt: new Date().toISOString().split('T')[0]
     };
 
@@ -205,6 +221,47 @@ const AddLand = () => {
               </div>
             </div>
 
+            {/* Legal Allotment Upload */}
+            <div className="mb-8">
+              <h2 className="mb-4 text-xl font-semibold text-foreground">Legal Allotment (Optional)</h2>
+              {!showLegalAllotment ? (
+                <Button type="button" variant="outline" onClick={() => setShowLegalAllotment(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Legal Document
+                </Button>
+              ) : (
+                <div className="p-4 border rounded-lg bg-muted/50">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label>Document Type</Label>
+                      <Select onValueChange={(value) => setLegalDoc(prev => ({ ...prev, type: value }))}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select document type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Will">Will</SelectItem>
+                          <SelectItem value="Affidavit">Affidavit</SelectItem>
+                          <SelectItem value="Death Certificate">Death Certificate</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Upload File</Label>
+                      <Input 
+                        type="file" 
+                        accept=".pdf,image/*"
+                        onChange={(e) => setLegalDoc(prev => ({ ...prev, file: e.target.files ? e.target.files[0] : null }))}
+                      />
+                    </div>
+                  </div>
+                  <Button type="button" variant="ghost" size="sm" onClick={() => { setShowLegalAllotment(false); setLegalDoc({ type: '', file: null }); }} className="mt-2 text-red-500">
+                    <X className="mr-2 h-4 w-4" />
+                    Remove
+                  </Button>
+                </div>
+              )}
+            </div>
+
             {/* Ownership History */}
             <div className="mb-8">
               <h2 className="mb-4 text-xl font-semibold text-foreground">Past Ownership History</h2>
@@ -315,6 +372,35 @@ const AddLand = () => {
               <p className="mt-2 text-sm text-muted-foreground">
                 Upload relevant documents like sale deeds, will, court orders, etc.
               </p>
+            </div>
+
+            {/* Officer Details */}
+            <div className="mb-8">
+              <h2 className="mb-4 text-xl font-semibold text-foreground">Data Entry Officer</h2>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="officerName">Officer / Talati Name</Label>
+                  <Input id="officerName" name="officerName" placeholder="Enter full name" required />
+                  <p className="text-xs text-muted-foreground mt-1">This field is for official record-keeping.</p>
+                </div>
+                <div>
+                  <Label htmlFor="officerAadhar">Aadhar Number (Officer)</Label>
+                  <Input 
+                    id="officerAadhar" 
+                    name="officerAadhar"
+                    type="text" 
+                    placeholder="XXXX XXXX XXXX" 
+                    maxLength={12}
+                    pattern="[0-9]{12}"
+                    required
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      e.target.value = value;
+                    }}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">12-digit numeric Aadhar number for verification.</p>
+                </div>
+              </div>
             </div>
 
             {/* Submit */}
